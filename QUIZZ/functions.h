@@ -102,6 +102,7 @@ void showLog() {
 	cout << "\nPress ENTER to continue..."; cin.get();
 }
 
+
 short yes_no(const char* question, string answ0 = "YES", string answ1 = "NO", bool existESC = false) noexcept 
 {
 	unique_ptr<string[]> answers(new string[]{ answ0,answ1 });
@@ -425,6 +426,7 @@ void adminMenu() {
 			cin.get(); cout << '\n'; }
 	}
 }
+
 
 void EnterMenu() {
 	while (true) {
