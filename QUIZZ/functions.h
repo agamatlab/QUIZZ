@@ -350,13 +350,22 @@ void changeQuiz() {
 
 
 void EnterMenu() {
-	short choice = yes_no("Do you want to:", "SIGN IN", "SIGN UP", true);;
-	if (!choice) { 
-		signIN();
-		changeQuiz();
-	}
-	else if(choice == 1) signUP();
+	while (true) {
+		try
+		{
+			short choice = yes_no("Do you want to:", "SIGN IN", "SIGN UP", true);;
+			if (!choice) { 
+				signIN();
+				changeQuiz();
+			}
+			else if(choice == 1) signUP();
+			else if(choice == -1) break;
 
+		}
+		catch (const std::exception& ex) 
+			{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
+
+	}
 }
 
 
@@ -537,7 +546,9 @@ void gameStart() {
 		try
 		{
 			if (choice) startQuiz();
-			else EnterMenu();
+			else EnterMenu(); // Exceptionlar Hell Olunub Eslinde
+						// Sadece Ileride yazila bilecek kodlar ucun 
+						// burada da try eledim
 		}
 		catch (const std::exception& ex)
 		{
