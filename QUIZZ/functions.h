@@ -153,7 +153,7 @@ void showResults(string leaderPath) {
 
 void readFileNames() {
 	ifstream fileList("fileList.txt", ios::in);
-	if (!fileList.is_open()) throw exception("Quiz can not be openned...");
+	if (!fileList.is_open()) throw exception("No QUIZ exists...");
 	string line;
 
 	while (getline(fileList, line))
@@ -321,8 +321,8 @@ void changeQuiz() {
 				getline(cin, file);
 
 				if (file == "fileList" || file == "leaderboard"
-					|| file == "participantList" || file == "admins")
-					throw exception("UnSupported QUIZ name...");
+					|| file == "participantList" || file == "admins"
+					|| file == "x64") throw exception("UnSupported QUIZ name...");
 
 			}
 			else
@@ -357,6 +357,13 @@ void EnterMenu() {
 	}
 	else if(choice == 1) signUP();
 
+}
+
+
+void restartGame() {
+	participants.clear();
+	questions.clear();
+	currentQuestionCount = 1;
 }
 
 
@@ -422,7 +429,12 @@ void startQuiz() {
 			mySetColor(LIGHTGREEN, BLACK);
 		}
 		short input = manageQuiz(choice);
-		if (input == -1) { showResults(fileName.substr(0, fileName.rfind('.')) + "L.txt"); exit(777);   }
+		if (input == -1) { 
+			showResults(fileName.substr(0, fileName.rfind('.')) + "L.txt"); 
+			bool answer = yes_no("Would you Like To Start again?");
+			if (answer) exit(777);
+			else { restartGame(); return; }
+		}
 		if (!input) choice = 0;
 	}
 
@@ -513,4 +525,26 @@ void updateQuiz(string path) {
 
 	}
 	file.close();
+}
+
+
+void gameStart() {
+	while (true) {
+		short choice = yes_no("Do you want to START or CREATE QUIZ?", "Create QUIZ", "Start QUIZ", true);
+		if (choice == -1) exit(777);
+
+		srand(time(NULL));
+		try
+		{
+			if (choice) startQuiz();
+			else EnterMenu();
+		}
+		catch (const std::exception& ex)
+		{
+			cout << ex.what() << endl;
+			cout << "\n\nPress any key to continue...\n\n";
+			cin.get();
+		}
+
+	}
 }
