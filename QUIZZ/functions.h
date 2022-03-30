@@ -106,7 +106,7 @@ void showTopLeaderBoard(int top = 10) noexcept {
 		if (i == top) break;
 	}
 
-	cout << "\n\nPress any key to continue...\n\n";
+	cout << "\nPress ENTER to continue...";
 
 	cin.get();
 }
@@ -123,7 +123,6 @@ bool isQuizExist(string quizName) noexcept {
 void showResults(string leaderPath) {
 	int answer[3]{};
 
-	cout << leaderPath << endl;
 	for (auto& question : questions)
 		if (question.selectedAnswer == -1) answer[2]++;
 		else if (question.selectedAnswer == question.correctAnswer) answer[0]++;
@@ -308,6 +307,17 @@ void signIN() {
 }
 
 
+bool isDirExistInDir(string mainDirPath, string dirName) {
+	directory_iterator pathIterator = directory_iterator(mainDirPath);;
+
+	for (const auto& file : pathIterator)
+		if (file.path().string() ==
+			mainDirPath + ((mainDirPath.back() == '\\') ? "" : "\\") + dirName)
+				return true;
+	return false;
+}
+
+
 void changeQuiz() {
 	while (true) {
 		try
@@ -323,17 +333,20 @@ void changeQuiz() {
 
 				if (file == "fileList" || file == "leaderboard"
 					|| file == "participantList" || file == "admins"
-					|| file == "x64") throw exception("UnSupported QUIZ name...");
+					|| file == "x64" || file.find('/') != string::npos 
+					|| file.find('\\') != string::npos) throw exception("UnSupported QUIZ name...");
 
 			}
 			else
 				try { file = getFile(); if (file == "") throw exception("No File chosen..."); }
 			catch (const std::exception& ex) {
-				cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); continue;
+				cout << '\n' << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); cout << '\n'; continue;
 			}
 
 			path = currentPath + '\\' + file;
 			create_directory(path);
+
+			if (!isDirExistInDir(currentPath, file)) throw exception("Quiz can not be Created...");
 
 			file += ".txt";
 
@@ -341,9 +354,9 @@ void changeQuiz() {
 		}
 		catch (const std::exception& ex)
 		{
-			cout << ex.what() << endl;
-			cout << "\n\nPress any key to continue...\n\n";
-			cin.get();
+			cout << '\n' << ex.what() << endl; 
+			cout << "Press ENTER to continue..."; 
+			cin.get(); cout << '\n';
 			system("cls");
 		}
 	}
@@ -364,7 +377,7 @@ void EnterMenu() {
 
 		}
 		catch (const std::exception& ex) 
-			{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
+			{ cout << '\n' << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); cout << '\n'; }
 
 	}
 }
@@ -410,9 +423,9 @@ void startQuiz() {
 	}
 	catch (const std::exception& ex)
 	{
-		cout << ex.what() << endl;
-		cout << "\n\nPress any key to continue...\n\n";
-		cin.get();
+		cout << '\n' << ex.what() << endl; 
+		cout << "Press ENTER to continue..."; 
+		cin.get(); cout << '\n';
 		system("cls");
 	}
 
@@ -421,7 +434,7 @@ void startQuiz() {
 	try 
 		{ logParticipant(currentPlayer.getTime(), currentPlayer.getName());}
 	catch (const std::exception& ex) 
-		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
+		{ cout << '\n' << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); cout << '\n'; }
 
 
 	while (true)
@@ -553,9 +566,9 @@ void gameStart() {
 		}
 		catch (const std::exception& ex)
 		{
-			cout << ex.what() << endl;
-			cout << "\n\nPress any key to continue...\n\n";
-			cin.get();
+			cout << '\n' << ex.what() << endl; 
+			cout << "Press ENTER to continue..."; 
+			cin.get(); cout << '\n';
 		}
 
 	}

@@ -31,15 +31,16 @@ vector<Participant> participants;
 
 
 int main() {
+
 	try 
 		{ readFileNames(); }
 	catch (const std::exception& ex) 
-		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); system("cls"); }
+		{ cout << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); system("cls"); }
 	
 	try 
 		{ readAdminstrators(); }
 	catch (const std::exception& ex) 
-		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
+	{ cout << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); cout << '\n'; }
 	
 	gameStart();
 
