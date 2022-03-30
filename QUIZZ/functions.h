@@ -57,6 +57,51 @@ bool manageChoice(unsigned short& choice, unsigned short answerCount) noexcept
 }
 
 
+short getAnswerIndex(const char* question, vector<string> answers, bool existESC = false) noexcept
+{
+	int answerCount = answers.size();
+	bool notFound(true);
+	U_short choice = 0;
+
+	mySetColor(LIGHTGREEN, BLACK);
+
+	while (notFound)
+	{
+
+		system("cls");
+		cout << question << endl;
+		for (size_t i = 0; i < answerCount; i++)
+		{
+			char prefix = ' ';
+			if (i == choice) { mySetColor(LIGHTGREEN, GREY); prefix = char(254); }
+			cout << ' ' << prefix << " <<" << answers[i] << ">>" << endl;
+			mySetColor(LIGHTGREEN, BLACK);
+		}
+		if (existESC) cout << "ESC - EXIT\n";
+		cout << endl;
+
+		notFound = manageChoice(choice, answerCount);
+		if (existESC && GetAsyncKeyState(VK_ESCAPE)) return -1;
+	}
+
+	return choice;
+}
+
+
+void showLog() {
+	system("cls");
+	ifstream file("participantList.txt");
+	if (!file) throw exception("No Participant Exists...");
+	if(!file.is_open()) throw exception("Can not Access Participant List...");
+
+	string line;
+
+	while (getline(file,line)) cout << line << endl;
+	file.close();
+
+	cout << "\nPress ENTER to continue..."; cin.get();
+}
+
 short yes_no(const char* question, string answ0 = "YES", string answ1 = "NO", bool existESC = false) noexcept 
 {
 	unique_ptr<string[]> answers(new string[]{ answ0,answ1 });
@@ -132,7 +177,9 @@ void showResults(string leaderPath) {
 	cout << "False Answers: " << answer[1] << endl;
 	cout << "Not Answered: " << answer[2] << endl;
 
-	Sleep(2000);
+	cout << "\nPress ENTER to continue..."; cin.get(); cout << '\n';
+
+	system("cls");
 
 	bool showLeaderBoard = !yes_no("Do you Wish to add your score in LeaderBoard?");
 	currentPlayer.setScore(round(float(answer[0]) / questions.size() * 100));
@@ -363,6 +410,22 @@ void changeQuiz() {
 }
 
 
+void adminMenu() {
+	while (true) {
+		try
+		{
+			short choice = yes_no("Do you want to:", "UPDATE QUIZ", "SHOW LOG", true);;
+			if (!choice) changeQuiz();
+			if (choice == 1) showLog();
+			else break;
+		}
+		catch (const std::exception& ex)
+			{ cout << '\n' << ex.what() << endl; 
+			cout << "Press ENTER to continue..."; 
+			cin.get(); cout << '\n'; }
+	}
+}
+
 void EnterMenu() {
 	while (true) {
 		try
@@ -370,7 +433,7 @@ void EnterMenu() {
 			short choice = yes_no("Do you want to:", "SIGN IN", "SIGN UP", true);;
 			if (!choice) { 
 				signIN();
-				changeQuiz();
+				adminMenu();
 			}
 			else if(choice == 1) signUP();
 			else if(choice == -1) break;
@@ -553,7 +616,7 @@ void updateQuiz(string path) {
 
 void gameStart() {
 	while (true) {
-		short choice = yes_no("Do you want to START or CREATE QUIZ?", "Create QUIZ", "Start QUIZ", true);
+		short choice = yes_no("Do you want to START or CREATE QUIZ?", "Manage QUIZ", "Start QUIZ", true);
 		if (choice == -1) exit(777);
 
 		srand(time(NULL));
