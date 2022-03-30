@@ -130,7 +130,7 @@ public:
 
 class Question {
 public:
-	string question = "asfsfs";
+	string question = "";
 	vector<string> answers;
 	short selectedAnswer = -1;
 	U_short correctAnswer = 0;

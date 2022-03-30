@@ -41,25 +41,7 @@ int main() {
 	catch (const std::exception& ex) 
 		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
 	
+	gameStart();
 
-
-	while (true) {
-		short choice = yes_no("Do you want to START or CREATE QUIZ?", "Create QUIZ", "Start QUIZ", true);
-		if (choice == -1) exit(777);
-
-		srand(time(NULL));
-		try
-		{
-			if(choice) startQuiz();
-			else EnterMenu();
-		}
-		catch (const std::exception& ex)
-		{
-			cout << ex.what() << endl;
-			cout << "\n\nPress any key to continue...\n\n";
-			cin.get();
-		}
-
-	}
 	return EXIT_SUCCESS;
 }
