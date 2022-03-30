@@ -86,8 +86,8 @@ public:
 
 
 class Participant : public User {
-	string _name;
-	float _score;
+	string _name = "";
+	float _score = 0;
 public:
 
 	string getName() const { return _name; }
@@ -125,18 +125,15 @@ public:
 		return fout;
 	}
 
-	friend istream& operator>>(istream& in, Participant& p) {
-
-	}
 };
 
 
 class Question {
 public:
-	string question;
+	string question = "";
 	vector<string> answers;
 	short selectedAnswer = -1;
-	U_short correctAnswer;
+	U_short correctAnswer = 0;
 
 	Question() = default;
 	Question(string question, vector<string> answers) : question(question), answers(answers) {}
@@ -155,7 +152,6 @@ public:
 			q.answers.push_back(line);
 		}
 		
-		// random_shuffle(q.answers.begin(), q.answers.end());
 		shuffle(q.answers.begin(), q.answers.end(), std::default_random_engine(time(0)));
 
 		for (auto& answer : q.answers)
