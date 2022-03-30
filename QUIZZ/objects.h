@@ -31,32 +31,6 @@ public:
 };
 
 
-class Guest : public User {
-private:
-	string _name;
-	float _score;
-
-public:
-
-	Guest() = default;
-
-	Guest(string name, float score) {
-		setName(name);
-	}
-
-	void setName(string name) { if (name.size() < 3) throw exception("Name must be longer than 2 characters"); _name = name; }
-
-	friend ofstream& operator<<(ofstream& fout, Guest& g) {
-		fout << g._time << endl;
-		return fout;
-	}
-
-	friend ifstream& operator>>(ifstream& fin, Guest& g) {
-		getline(fin, g._time);
-		return fin;
-	}
-};
-
 class Admin : public User {
 	string _login;
 	string _password;
