@@ -34,7 +34,7 @@ int main() {
 	try 
 		{ readFileNames(); }
 	catch (const std::exception& ex) 
-		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); }
+		{ cout << ex.what() << endl; cout << "\n\nPress any key to continue...\n\n"; cin.get(); system("cls"); }
 	
 	try 
 		{ readAdminstrators(); }
