@@ -79,6 +79,7 @@ short yes_no(const char* question, string answ0 = "YES", string answ1 = "NO", bo
 			mySetColor(LIGHTGREEN, BLACK);
 		}
 		if (existESC) cout << "ESC - EXIT\n";
+		cout << endl;
 
 		notFound = manageChoice(choice, answerCount);
 		if(existESC && GetAsyncKeyState(VK_ESCAPE)) return -1;
