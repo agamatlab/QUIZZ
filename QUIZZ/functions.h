@@ -453,7 +453,64 @@ void restartGame() {
 }
 
 
-void startQuiz() {
+void animateText(const char* text) {
+	for (size_t i = 0; text[i]; i++) {
+		if (_kbhit()) 
+		{ 
+			char sym = _getch(); 
+			if (sym == 224 || sym == -32)_getch();
+			cout << &(text[i]); 
+			return;
+		}
+		else cout << text[i];
+		Sleep(50);
+	}
+}
+
+
+void showRules() {
+	animateText("The rules are simple:\n");
+	animateText("  * Enter - can SELECT and DESELECT answer\n");
+	animateText("  * Arrow KEYS - can be used for changing Selected ANSWER and QUESTION\n");
+	animateText("  * SHIFT + E - To END the QUIZZ\n");
+
+	animateText("\nPress ENTER to continue..."); 
+	cin.get();
+}
+
+
+void startQuiz(string fileName) {
+	U_short choice = 0;
+	currentQuestion = questions.begin();
+
+	while (true)
+	{
+		system("cls");
+		cout << " " << currentQuestionCount << ") " << (*currentQuestion).question << endl;
+		int i = 0;
+
+		for (auto& answer : (*currentQuestion).answers)
+		{
+			char prefix = ' ';
+			if (i == (*currentQuestion).selectedAnswer)prefix = char(254);
+			if (i++ == choice) { mySetColor(LIGHTGREEN, GREY); }
+			cout << ' ' << prefix << " <<" << answer << ">>" << endl;
+			mySetColor(LIGHTGREEN, BLACK);
+		}
+		short input = manageQuiz(choice);
+		if (input == -1) {
+			showResults(fileName.substr(0, fileName.rfind('.')) + "L.txt");
+			bool answer = yes_no("Would you Like To Start again?");
+			if (answer) exit(777);
+			else { restartGame(); return; }
+		}
+		if (!input) choice = 0;
+	}
+}
+
+
+void enterQuiz() {
+	showRules();
 
 	string fileName = getFile();
 	if (fileName == "") return;
@@ -469,10 +526,6 @@ void startQuiz() {
 		copy(tempQuestion.begin(), tempQuestion.end(), questions.begin());
 	}
 
-	U_short choice = 0;
-	currentQuestion = questions.begin();
-
-	mySetColor(LIGHTGREEN, BLACK);
 
 	while(true)
 	try
@@ -499,32 +552,7 @@ void startQuiz() {
 	catch (const std::exception& ex) 
 		{ cout << '\n' << ex.what() << endl; cout << "Press ENTER to continue..."; cin.get(); cout << '\n'; }
 
-
-	while (true)
-	{
-		system("cls");
-		cout << " " << currentQuestionCount << ") " << (*currentQuestion).question << endl;
-		int i = 0;
-
-		for (auto& answer : (*currentQuestion).answers)
-		{
-			char prefix = ' ';
-			if (i == (*currentQuestion).selectedAnswer)prefix = char(254);
-			if (i++ == choice) { mySetColor(LIGHTGREEN, GREY); }
-			cout << ' ' << prefix << " <<" << answer << ">>" << endl;
-			mySetColor(LIGHTGREEN, BLACK);
-		}
-		short input = manageQuiz(choice);
-		if (input == -1) { 
-			showResults(fileName.substr(0, fileName.rfind('.')) + "L.txt"); 
-			bool answer = yes_no("Would you Like To Start again?");
-			if (answer) exit(777);
-			else { restartGame(); return; }
-		}
-		if (!input) choice = 0;
-	}
-
-
+	startQuiz(fileName);
 }
 
 
@@ -622,7 +650,7 @@ void gameStart() {
 		srand(time(NULL));
 		try
 		{
-			if (choice) startQuiz();
+			if (choice) enterQuiz();
 			else EnterMenu(); // Exceptionlar Hell Olunub Eslinde
 						// Sadece Ileride yazila bilecek kodlar ucun 
 						// burada da try eledim
